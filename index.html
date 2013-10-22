@@ -3,7 +3,7 @@
 <head>
   <title>Go-Data</title>
   <script type="text/javascript" src="https://cdn.goinstant.net/v1/platform.min.js"></script>
-  <link rel="stylesheet" type="text/css" media="all" href="http://static.jstree.com/v.1.0pre/themes/default/style.css">
+  <link rel="stylesheet" type="text/css" media="all" href="css/jstree.css">
 </head>
 
 <body>
@@ -12,44 +12,6 @@
   <script type="text/javascript" src="http://static.jstree.com/v.1.0pre/jquery.cookie.js"></script>
   <script type="text/javascript" src="http://static.jstree.com/v.1.0pre/jquery.hotkeys.js"></script>
   <script type="text/javascript" src="http://static.jstree.com/v.1.0pre/jquery.jstree.js"></script>
-  <script>
-    // Connect URL
-    var url = prompt("GoInstant App URL?");
-
-    var platform = new goinstant.Platform(url);
-
-    // Connect to GoInstant
-    platform.connect(function(err) {
-      if (err) {
-        return console.error('Error connecting to platform:', err);
-      }
-
-      var str = "";
-      function js_traverse(o) {
-        var type = typeof o 
-        if (type == "object") {
-          for (var key in o) {
-          str += '<li><a>' + key + '</a><ul>';
-            js_traverse(o[key]);
-            str += "</ul></li>";
-          }
-        } else {
-          str += "<li><a>" + o + "</a></li>";
-        }
-      }
-
-      var roomName = prompt("Which Room?");
-      var roomObj = platform.room(roomName);
-      roomObj.join(function(err) {
-        roomObj.key('/').get(function(err, val, context) {
-          js_traverse(val);
-          $("#container").append('<ul>' + str + '</ul>');
-          $('#container').jstree({
-            "plugins" : ["themes","html_data","ui","crrm","hotkeys"]
-          });
-        });
-      });
-    });
-  </script>
+  <script type="text/javascript" src="js/go-data.js"></script>
 </body>
 </html>
