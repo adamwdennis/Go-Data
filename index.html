@@ -18,12 +18,12 @@
     <div id="godata"></div>
     <div id="logger-box-wrapper">
       <section id="log-options">
-        <input type='checkbox' id='autoscroll' />Auto-scroll 
+        <input type='checkbox' id='autoscroll' checked/>Auto-scroll 
         <input type='checkbox' id='enableconsole' onclick='enableChanged()'/>Enable
+        <button onclick='clearLog()'>Clear</button>
       </section>
       <div id='loggerbox'></div>
       <div id='contextbox'>
-        <h3>Context Details</h3>
         <div id='contextdata'></div>
       </div>
     </div>

@@ -78,6 +78,7 @@ h1 {
   font-size: .9em;
   padding: 1em;
   border-radius: 0 3px 0 0;
+  display:none;
 }
 
   #contextbox h3 {
@@ -128,9 +129,14 @@ h1 {
   font-style: italic;
 }
 
-.contextbutton {
-  display: block;
+.rightside {
   float: right;
+  display:block;
+}
+
+.contextbutton {
+  display: inline;
+ /* float: right;*/
   clear: both;
   font: bold 11px sans-serif;
   background-color: #004E81;
@@ -143,3 +149,8 @@ h1 {
   .contextbutton:hover {
     background-color: #0061A0;
   }
+
+.closecontext {
+  float:right;
+  cursor: pointer;
+}

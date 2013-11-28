@@ -1,11 +1,10 @@
 function startLogger() {
-  console.log('STart LOGGER called');
   if (!document.getElementById('enableconsole').checked) {
     return;
   }
 
-  var rootKey = window.giRoom.key('/');
-  rootKey.watch(loggit, function(err) {
+  window.giRootKey = window.giRoom.key('/');
+  window.giRootKey.watch(loggit, function(err) {
     if (err) {
       console.log('ERROR WATCHING ROOT', err);
     }
@@ -13,8 +12,10 @@ function startLogger() {
 }
 
 function stopLogger() {
-  console.log('STOP LOGGER');
-  window.giRoom.key('/').unwatch();
+  if (!window.giRootKey) {
+    return;
+  }
+  window.giRootKey.unwatch();
 }
 
 function loggit(val, context) {
@@ -44,8 +45,6 @@ var contextArray = [];
 var contextNum = -1;
 
 function createLog(val, context) {
-  console.log('context', context);
-
   val = checkIfObj(val);
 
   var logText = '<span class="loglabel">User:</span> <span class="logdata loguser">'+ context.userId +'</span>'+
@@ -55,17 +54,23 @@ function createLog(val, context) {
 
   contextNum++;
   contextArray[contextNum] = context;
-  var contextButton = ' <span class="contextbutton" onclick="showContext('+contextNum+')">Show Context</span>';
+  
+  var nodeButton = '<span class="rightside"> <span class="contextbutton" onclick="showNode(\''+context.key+'\')">Show Node</span>';
+  var contextButton = ' <span class="contextbutton" onclick="showContext('+contextNum+')">Show Context</span></span>';
 
-  return logText + contextButton;
+  return logText + nodeButton + contextButton;
+}
+
+function closeContext() {
+  var contextBox = document.getElementById('contextbox');
+  contextBox.style.display = 'none';
 }
 
 function showContext(conNum) {
   var context = contextArray[conNum];
-  var contextText = '';
+  var contextText = '<div class="closecontext" onclick="closeContext()">[X]</div>';
 
   for (var k in context) {
-    console.log('K', k);
     if (k === 'value') {
       context[k] = checkIfObj(context[k]);
     }
@@ -76,17 +81,15 @@ function showContext(conNum) {
 
   var contextBox = document.getElementById('contextbox');
   contextBox.innerHTML = contextText; 
+  contextBox.style.display = 'block';
 
 }
 
 if (window.location.search.indexOf('console=true') !== -1) {
-  console.log('URL ENABLE CONSOLE');
-
   var autoScroll = document.getElementById('enableconsole').checked = true;
 }
 
 function enableChanged(e, e2) {
-  console.log('eeeeeee', document.getElementById('enableconsole').checked);
   var consoleEnabled = document.getElementById('enableconsole').checked;
 
   if (consoleEnabled) {
@@ -94,4 +97,18 @@ function enableChanged(e, e2) {
   } else {
     stopLogger();
   }
+}
+
+function clearLog() {
+  closeContext();
+  contextArray = [];
+  contextNum = -1;
+
+  var loggerBox = document.getElementById('loggerbox');
+  loggerBox.innerHTML = ''; 
+
+}
+
+function showNode(key) {
+  console.log('KEY', key);
 }
