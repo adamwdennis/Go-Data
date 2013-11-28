@@ -16,12 +16,17 @@
   <div id="container">
     <h1>Go Data</h1>
     <div id="godata"></div>
-    <div id='loggerbox'></div>
-    <div id='contextbox'>Context Details
-      <div id='contextdata'></div>
+    <div id="logger-box-wrapper">
+      <section id="log-options">
+        <input type='checkbox' id='autoscroll' />Auto-scroll 
+        <input type='checkbox' id='enableconsole' />Enable
+      </section>
+      <div id='loggerbox'></div>
+      <div id='contextbox'>
+        <h3>Context Details</h3>
+        <div id='contextdata'></div>
+      </div>
     </div>
-    <input type='checkbox' id='autoscroll' />Auto-scroll 
-    <input type='checkbox' id='enableconsole' />Enable
   </div>
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.js"></script>
   <script type="text/javascript" src="http://static.jstree.com/v.1.0pre/jquery.cookie.js"></script>

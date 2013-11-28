@@ -13,7 +13,7 @@ function loggit(val, context) {
   var logText = createLog(val, context);
   
   var loggerBox = document.getElementById('loggerbox');
-  loggerBox.innerHTML = loggerBox.innerHTML + '<p class="logtext">'+logText+'</p>'; 
+  loggerBox.innerHTML = loggerBox.innerHTML + '<p class="logtext clearfix">'+logText+'</p>'; 
   
   //auto scroll
   var autoScroll = document.getElementById('autoscroll').checked;
