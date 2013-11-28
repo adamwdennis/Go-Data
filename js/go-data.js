@@ -28,8 +28,8 @@ platform.connect(function(err) {
 
     var rootKey = roomObj.key('/');
     rootKey.get(setupTree);
-    rootKey.on('set', { bubble: true, listener: update});
-    rootKey.on('remove', { bubble:true, local:true, listener: keyRemoved });
+    rootKey.on('set', { bubble: true, listener: keyUpdated});
+    rootKey.on('remove', { bubble:true, listener: keyRemoved });
   });
 
   function setupTree(err, val) {
@@ -130,14 +130,16 @@ platform.connect(function(err) {
     */
   }
 
-  function update(val, context) {
+  function keyUpdated(val, context) {
     // find the element
     var node = findNode(context.key);
+    
+    // update the element
     var leaf = node.find('.value');
     tree.jstree("set_text", leaf, val);
-    // update the element
-    // expand the tree up to the element
-    tree.jstree('open_node', leaf); // not working
+
+    openNode(node);
+
     // scroll to the element
     // highlight the element
   }
@@ -168,7 +170,18 @@ platform.connect(function(err) {
         tree.remove(node.parent().closest('li'));
       }
     });
+  }
 
+  function openNode(node) {
+    // expand the tree up to the element
+    var currNode = node;
+
+    do {
+      tree.jstree('open_node', currNode);
+
+      currNode = currNode.parent().closest('.key');
+
+    } while(currNode.length);
   }
 
   function findNode(keyName) {
@@ -204,7 +217,7 @@ function convertJSONToLists(o, str) {
     }
 
   } else {
-    str += '<li data-key-name="' + o + '" class="value"><a>' + o + '</a></li>';
+    str += '<li class="value"><a>' + o + '</a></li>';
   }
 
   return str;
