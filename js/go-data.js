@@ -46,20 +46,20 @@ platform.connect(function(err) {
           "icons": true
         }
       }).bind("select_node.jstree", function (e, data) {
-        console.log("STUFF:",e,data);
-        console.log("ID:",data.rslt.obj.attr("id"));
-      });
-    });
-    roomObj.key('/messages').get(function(err,val, context) {
-      Object.keys(val).forEach(function(key) {
-        console.log(key, val[key].text);
-      });
-      roomObj.key('/messages/1384795411415_628759779').remove(function(err) {
-        if (err) {
-          throw err;
-        }
+        var keyName = getName(data);
       });
     });
   });
 });
 
+function getName(data) {
+  var name = "";
+  var node = $(data.rslt.obj);
+  do {
+    if (node.prop('tagName') == 'LI') {
+      name = '/' + node.attr('id') + name;
+    }
+    node = node.parent();
+  } while(!node.hasClass('jstree'));
+  return name;
+}
