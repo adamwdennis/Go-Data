@@ -158,8 +158,14 @@ platform.connect(function(err) {
     var keyName = getKeyName(node);
 
     roomObj.key(keyName).remove(function() {
-      tree.remove(node);
+      if (node.hasClass('key')) {
+        tree.remove(node);
+
+      } else {
+        tree.remove(node.parent().closest('li'));
+      }
     });
+
   }
 
   function findNode(keyName) {
