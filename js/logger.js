@@ -3,7 +3,7 @@ function startLogger() {
     return;
   }
 
-  window.giRootKey = window.giRoom.key('/');
+  window.giRootKey = window.roomObj.key('/');
   window.giRootKey.watch(loggit, function(err) {
     if (err) {
       console.log('ERROR WATCHING ROOT', err);
@@ -110,5 +110,5 @@ function clearLog() {
 }
 
 function showNode(key) {
-  console.log('KEY', key);
+  openNode(findNode(key));
 }

@@ -10,6 +10,7 @@ var roomName = 'testroom';//prompt("Which Room?");
 
 var platform = new goinstant.Platform(url);
 
+var tree;
 // Connect to GoInstant
 platform.connect(function(err) {
   if (err) {
@@ -19,12 +20,14 @@ platform.connect(function(err) {
   var roomObj = platform.room(roomName);
   window.roomObj = roomObj;
 
-  var tree;
+
 
   roomObj.join(function(err) {
     if (err) {
       throw err;
     }
+  
+    startLogger();
 
     var rootKey = roomObj.key('/');
     rootKey.get(setupTree);
@@ -172,36 +175,38 @@ platform.connect(function(err) {
     });
   }
 
-  function openNode(node) {
-    // expand the tree up to the element
-    var currNode = node;
 
-    do {
-      tree.jstree('open_node', currNode);
-
-      currNode = currNode.parent().closest('.key');
-
-    } while(currNode.length);
-  }
-
-  function findNode(keyName) {
-    var keyNames = keyName.split('/').slice(1);
-
-    var selectorKeyNames = keyNames.map(function(key) {
-      return 'li[data-key-name=' + key + ']';
-    });
-
-    var selector = selectorKeyNames.join(' ');
-
-    var node = tree.find(selector);
-
-    if (node.length) {
-      return node.eq(0);
-    } else {
-      return null;
-    }
-  }
 });
+
+function openNode(node) {
+  // expand the tree up to the element
+  var currNode = node;
+
+  do {
+    tree.jstree('open_node', currNode);
+
+    currNode = currNode.parent().closest('.key');
+
+  } while(currNode.length);
+}
+
+function findNode(keyName) {
+  var keyNames = keyName.split('/').slice(1);
+
+  var selectorKeyNames = keyNames.map(function(key) {
+    return 'li[data-key-name=' + key + ']';
+  });
+
+  var selector = selectorKeyNames.join(' ');
+
+  var node = tree.find(selector);
+
+  if (node.length) {
+    return node.eq(0);
+  } else {
+    return null;
+  }
+}
 
 function convertJSONToLists(o, str) {
   str = str || '';
