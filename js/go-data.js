@@ -32,6 +32,7 @@ platform.connect(function(err) {
     var rootKey = roomObj.key('/');
     rootKey.get(setupTree);
     rootKey.on('set', { bubble: true, listener: keyUpdated});
+    rootKey.on('add', { bubble: true, listener: keyUpdated});
     rootKey.on('remove', { bubble:true, listener: keyRemoved });
   });
 
@@ -55,14 +56,14 @@ platform.connect(function(err) {
       ],
       'contextmenu': {
         items: {
-          // Some key
-          /*
-          "set" : {
-          // The item label
-          "label"       : "Set",
-          // The function to execute upon a click
-          "action"      : set
-          },
+            // Some key
+            /*
+            "set" : {
+            // The item label
+            "label"       : "Set",
+            // The function to execute upon a click
+            "action"      : set
+            },
           */
 
           "remove" : {
@@ -85,8 +86,8 @@ platform.connect(function(err) {
         "icons": true
       }
     });
-    tree.jstree('contextmenu', 'items', {});
 
+    tree.jstree('contextmenu', 'items', {});
 
     tree.bind("select_node.jstree", function(e, data) {
       /////////////////////
@@ -139,18 +140,41 @@ platform.connect(function(err) {
     */
   }
 
-  function keyUpdated(val, context) {
-    // find the element
-    var node = findNode(context.key);
-    
-    // update the element
+  function setValue(node, val, cb) {
     var leaf = node.find('.value');
-    tree.jstree("set_text", leaf, val);
 
-    openNode(node);
+    if (!leaf.length) {
+      return tree.jstree(
+        'create_node',
+        node,
+        0,
+        {
+          attr: {
+            'class': 'value'
+          },
+          'state': 'open',
+        },
+        finish
+      );
 
-    // scroll to the element
-    // highlight the element
+    } else {
+      finish(leaf);
+    }
+
+    function finish(leaf) {
+      tree.jstree("set_text", leaf, val);
+
+      openNode(node);
+
+      cb();
+    }
+  }
+
+  function keyUpdated(val, context) {
+    createKey(context.key, function(node) {
+      setValue(node, val, function() {
+      });
+    });
   }
 
   function keyRemoved(val, context) {
@@ -196,8 +220,49 @@ function openNode(node) {
   } while(currNode.length);
 }
 
-function findNode(keyName) {
-  var keyNames = keyName.split('/').slice(1);
+  function createKeys(keyNames, node, cb) {
+    if (!keyNames.length) {
+      // check for value node
+      return cb(node);
+    }
+
+    var currKey = keyNames.shift();
+    var selector = '> ul > li[data-key-name=' + currKey + ']';
+
+    var nextNode = node.find(selector);
+
+    if (!nextNode.length) {
+      return tree.jstree(
+        'create_node',
+        node,
+        0,
+        {
+          attr: {
+            'data-key-name': currKey,
+            'class': 'key',
+          },
+          'state': 'open',
+          'data': currKey
+        },
+
+        function(newNode) {
+          return createKeys(keyNames, newNode, cb);
+        }
+      );
+
+    } else {
+      return createKeys(keyNames, nextNode, cb);
+    }
+  }
+
+  function createKey(fullKeyName, cb) {
+    var keyNames = fullKeyName.split('/').slice(1);
+
+    createKeys(keyNames, tree, cb);
+  }
+
+  function findNode(keyName) {
+    var keyNames = keyName.split('/').slice(1);
 
   var selectorKeyNames = keyNames.map(function(key) {
     return 'li[data-key-name=' + key + ']';
