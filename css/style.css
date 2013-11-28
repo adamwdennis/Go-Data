@@ -11,6 +11,8 @@ body {
 #godata {
   margin: 3em auto;
   text-align: left;
+  width: 50%;
+  float:left;
 }
 
 h1 {
@@ -51,4 +53,25 @@ h2 {
   left: 100px;
   color: #FFF;
   font-weight: 100;
+}
+
+#loggerbox {
+  width: 50%;
+  
+  height: 100%;
+ 
+  overflow-y: scroll;
+  background-color:white;
+}
+
+.loglabel {
+  font-weight:bold;
+}
+
+.logdata {
+  font-size:75%
+}
+
+.loginfo {
+  font-style:italic;
 }

@@ -1,6 +1,6 @@
 // Connect URL
-var url = "https://goinstant.net/goinstant-services/docs";
-var roomName = 'chat';//prompt("Which Room?");
+var url = "https://goinstant.net/kirk/godatahack";
+var roomName = 'testroom';//prompt("Which Room?");
 //var url = prompt("GoInstant App URL?");
 
 var platform = new goinstant.Platform(url);
@@ -27,6 +27,10 @@ platform.connect(function(err) {
 
   var roomObj = platform.room(roomName);
   roomObj.join(function(err) {
+
+    startLogger(roomObj);
+    window.giRoom = roomObj;
+
     roomObj.key('/').get(function(err, val, context) {
       js_traverse(val);
       $("#godata").append('<ul>' + str + '</ul>');
@@ -48,16 +52,6 @@ platform.connect(function(err) {
       }).bind("select_node.jstree", function (e, data) {
         console.log("STUFF:",e,data);
         console.log("ID:",data.rslt.obj.attr("id"));
-      });
-    });
-    roomObj.key('/messages').get(function(err,val, context) {
-      Object.keys(val).forEach(function(key) {
-        console.log(key, val[key].text);
-      });
-      roomObj.key('/messages/1384795411415_628759779').remove(function(err) {
-        if (err) {
-          throw err;
-        }
       });
     });
   });
