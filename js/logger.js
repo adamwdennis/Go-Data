@@ -1,11 +1,20 @@
-function startLogger(roomObj) {
-  var rootKey = roomObj.key('/');
+function startLogger() {
+  console.log('STart LOGGER called');
+  if (!document.getElementById('enableconsole').checked) {
+    return;
+  }
 
+  var rootKey = window.giRoom.key('/');
   rootKey.watch(loggit, function(err) {
     if (err) {
       console.log('ERROR WATCHING ROOT', err);
     }
   });
+}
+
+function stopLogger() {
+  console.log('STOP LOGGER');
+  window.giRoom.key('/').unwatch();
 }
 
 function loggit(val, context) {
@@ -68,4 +77,21 @@ function showContext(conNum) {
   var contextBox = document.getElementById('contextbox');
   contextBox.innerHTML = contextText; 
 
+}
+
+if (window.location.search.indexOf('console=true') !== -1) {
+  console.log('URL ENABLE CONSOLE');
+
+  var autoScroll = document.getElementById('enableconsole').checked = true;
+}
+
+function enableChanged(e, e2) {
+  console.log('eeeeeee', document.getElementById('enableconsole').checked);
+  var consoleEnabled = document.getElementById('enableconsole').checked;
+
+  if (consoleEnabled) {
+    startLogger();
+  } else {
+    stopLogger();
+  }
 }

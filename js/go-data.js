@@ -34,8 +34,8 @@ platform.connect(function(err) {
   var roomObj = platform.room(roomName);
   roomObj.join(function(err) {
 
-    startLogger(roomObj);
     window.giRoom = roomObj;
+    startLogger();
 
     roomObj.key('/').get(function(err, val, context) {
       var str = convertJSONToLists(val);
