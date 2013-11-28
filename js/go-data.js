@@ -88,10 +88,11 @@ platform.connect(function(err) {
     tree.jstree('contextmenu', 'items', {});
 
 
-    tree.bind("select_node.jstree", function() {
+    tree.bind("select_node.jstree", function(e, data) {
       /////////////////////
       // SELECT
       /////////////////////
+      window.location.hash = "#" + getKeyName(data.rslt.obj);
     }).bind('rename_node.jstree', function(e, data) {
       /////////////////////
       // RENAME
@@ -120,6 +121,11 @@ platform.connect(function(err) {
       /////////////////////
 
     });
+
+    var keyOnLoad = window.location.hash.substring(1);
+    if (keyOnLoad) {
+      openNode(findNode(keyOnLoad));
+    }
 
     /*
     create_node.jstree
