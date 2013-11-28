@@ -28,8 +28,8 @@ platform.connect(function(err) {
 
     var rootKey = roomObj.key('/');
     rootKey.get(setupTree);
-    rootKey.on('set', update);
-    rootKey.on('remove', { bubble:true, listener: keyRemoved });
+    rootKey.on('set', { bubble: true, listener: update});
+    rootKey.on('remove', { bubble:true, local:true, listener: keyRemoved });
   });
 
   function setupTree(err, val) {
@@ -130,11 +130,14 @@ platform.connect(function(err) {
     */
   }
 
-  function update() {
+  function update(val, context) {
     // find the element
-
+    var node = findNode(context.key);
+    var leaf = node.find('.value');
+    tree.jstree("set_text", leaf, val);
     // update the element
     // expand the tree up to the element
+    tree.jstree('open_node', leaf); // not working
     // scroll to the element
     // highlight the element
   }
