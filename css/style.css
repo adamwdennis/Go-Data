@@ -1,54 +1,156 @@
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+html {
+  height: 100%;
+}
+
 body {
+  margin: 0;
+  position: relative;
+  height: 100%;
   background: #10416F;
   font-family: sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
 }
 
 #container {
-  margin: 3em auto;
-  text-align: center;
+  height: 87%;
+  margin: 0 auto;
+  padding: 1em;
 }
+
 #godata {
-  margin: 3em auto;
+  height: 87%;
+  width: 60%;
+  float: left;
   text-align: left;
+  border-radius: 4px 0 0 4px;
+  overflow: hidden;
+  padding: 1em;
 }
 
 h1 {
+  height: auto;
   color: white;
-  margin-bottom: 1.5em;
   font-weight: 100;
   letter-spacing: -1px;
-  margin-left: -.5em;
+  text-align: center;
 }
 
-h1 a {
-  color: white;
-  text-decoration: none;
-}
-
-h1 a:hover {
-  color: #3CDD3C;
-}
-
-h1 a img {
+#logger-box-wrapper {
   position: relative;
-  top: 6px;
-  left: 3px;
-  -webkit-transition: all .15s ease-in-out;
-  -moz-transition: all .15s ease-in-out;
-  -ms-transition: all .15s ease-in-out;
-  -o-transition: all .15s ease-in-out;
-  transition: all .15s ease-in-out;
+  float: left;
+  height: 87%;
+  width: 40%;
+  border-left: 1px solid #222;
 }
 
-h1 a:hover img {
-  top: 3px;
+#loggerbox {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #0B1C31;
+  color: #eee;
+  border-radius: 0 4px 4px 0;
 }
 
-h2 {
-  position: fixed;
+#contextbox {
+  position: absolute;
   bottom: 0;
-  left: 100px;
+  right: 2em;
+  width: 92%;
+  overflow-y: auto;
+  background-color: #426DB8;
   color: #FFF;
-  font-weight: 100;
+  font-size: .9em;
+  padding: 1em;
+  border-radius: 0 3px 0 0;
+  display:none;
+}
+
+  #contextbox h3 {
+      text-align: center;
+      color: #2A549E;
+      margin: 0;
+    }
+
+.logtext {
+  margin-top: 0;
+  padding: 1em;
+  font-size: .9em;
+  border-bottom: 1px dotted rgba(221, 221, 221, 0.3);
+}
+
+#log-options {
+  position: absolute;
+  color: rgba(255,255,255,.8);
+  right: 0;
+  font-size: .9em;
+  top: -2em;
+}
+
+#log-options input {
+  margin-left: 1em;
+  font-size: .5em;
+  position: relative;
+  top: -2px;
+  right: 2px;
+}
+
+.loglabel, .contextlabel {
+  display: block;
+  float: left;
+  clear: both;
+  margin-right: .5em;
+  margin-bottom: .25em;
+  font-weight: bold;
+  font-size: .9em;
+}
+
+.logdata, .contextdata {
+  display: block;
+  float: left;
+}
+
+.loginfo {
+  font-style: italic;
+}
+
+.rightside {
+  float: right;
+  display:block;
+}
+
+.contextbutton {
+  display: inline;
+ /* float: right;*/
+  clear: both;
+  font: bold 11px sans-serif;
+  background-color: #004E81;
+  color: #C4DDE7;
+  padding: .5em;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+  .contextbutton:hover {
+    background-color: #0061A0;
+  }
+
+.closecontext {
+  float:right;
+  cursor: pointer;
 }
