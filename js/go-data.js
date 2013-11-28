@@ -11,24 +11,31 @@ platform.connect(function(err) {
     return console.error('Error connecting to platform:', err);
   }
 
-  var str = "";
-  function js_traverse(o) {
+  function convertJSONToLists(o, str) {
+    str = str || '';
     var type = typeof o; 
     if (type == "object") {
       for (var key in o) {
-      str += '<li id="' + key + '"><a class="key">/' + key + '</a><ul>';
-        js_traverse(o[key]);
-        str += "</ul></li>";
+        str += '<li class="key" id="' + key + '">';
+        str += '<a class="key">/' + key + '</a>';
+        str += '<ul>';
+        str = convertJSONToLists(o[key], str);
+        str += "</ul>";
+        str += "</li>";
       }
+
     } else {
       str += '<li id="' + o + '" class="value"><a>' + o + '</a></li>';
     }
+
+    return str;
   }
 
   var roomObj = platform.room(roomName);
   roomObj.join(function(err) {
     roomObj.key('/').get(function(err, val, context) {
-      js_traverse(val);
+      var str = convertJSONToLists(val);
+
       $("#godata").append('<ul>' + str + '</ul>');
       $('#godata').jstree({
         "plugins": [
@@ -46,20 +53,44 @@ platform.connect(function(err) {
           "icons": true
         }
       }).bind("select_node.jstree", function (e, data) {
-        var keyName = getName(data);
+        var keyName = getKeyName(data);
+
+
+        console.log(keyName);
+
+      }).bind('rename_node.jstree', function(e) {
+
+      }).bind('delete_node.jstree', function(e) {
+
+      }).bind('create_node.jstree', function(e) {
+
       });
+
+      /*
+      create_node.jstree
+      delete_node.jstree
+      rename_node.jstree
+
+      open_node.jstree
+      move_node.jstree
+      clean_node.jstree
+      refresh.jstree
+      */
     });
   });
 });
 
-function getName(data) {
+function getKeyName(data) {
   var name = "";
   var node = $(data.rslt.obj);
   do {
-    if (node.prop('tagName') == 'LI') {
+    if (node.prop('tagName') == 'LI' && node.hasClass('key')) {
       name = '/' + node.attr('id') + name;
     }
+
     node = node.parent();
+
   } while(!node.hasClass('jstree'));
+
   return name;
 }
