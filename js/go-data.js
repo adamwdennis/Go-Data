@@ -53,16 +53,36 @@ platform.connect(function(err) {
           "icons": true
         }
       }).bind("select_node.jstree", function (e, data) {
+        /////////////////////
+        // SELECT
+        /////////////////////
+      }).bind('rename_node.jstree', function(e, data) {
+        /////////////////////
+        // RENAME
+        /////////////////////
+
+        console.log("rename node:",e);
         var keyName = getKeyName(data);
-
-
-        console.log(keyName);
-
-      }).bind('rename_node.jstree', function(e) {
+        var newValue = data.args[1];
+        var isValue = true;
+        if (isValue) {
+          roomObj.key(keyName).set(newValue, function(err) {
+            if (err) {
+              throw err;
+            }
+            console.log('renamed');
+          });
+        }
 
       }).bind('delete_node.jstree', function(e) {
+        /////////////////////
+        // DELETE
+        /////////////////////
 
       }).bind('create_node.jstree', function(e) {
+        /////////////////////
+        // CREATE
+        /////////////////////
 
       });
 
