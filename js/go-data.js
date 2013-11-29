@@ -1,11 +1,12 @@
 /*jshint browser:true*/
-/*global goinstant, $, console */
+/*global goinstant, $, console, _, async */
 
 'use strict';
 
 // Connect URL
 var url = "https://goinstant.net/nealstewart/awesome";
 var roomName = 'supercool';//prompt("Which Room?");
+
 
 //var url = prompt("GoInstant App URL?");
 
@@ -92,6 +93,7 @@ platform.connect(function(err) {
       // SELECT
       /////////////////////
       window.location.hash = "#" + getKeyName(data.rslt.obj);
+
     }).bind('rename_node.jstree', function(e, data) {
       /////////////////////
       // RENAME
@@ -169,10 +171,23 @@ platform.connect(function(err) {
   }
 
   function keyUpdated(val, context) {
-    createKey(context.key, function(node) {
-      setValue(node, val, function() {
-      });
-    });
+    var keysToCreate = discoverKeysToCreate(val, context);
+
+    async.forEachSeries(
+      keysToCreate,
+
+      function(k, next) {
+        createKey(k.name, function(node) {
+          setValue(node, k.val, function() {
+            next();
+          });
+        });
+      },
+
+      function() {
+        console.log('asdsd');
+      }
+    );
   }
 
   function keyRemoved(val, context) {
@@ -308,4 +323,52 @@ function getKeyName(node) {
   } while(!node.hasClass('jstree'));
 
   return name;
+}
+
+function convertToKeys(obj) {
+  var keys = [];
+
+  _.each(obj, function(v, k) {
+    if (_.isPlainObject(v)) {
+      var subKeys = convertToKeys(v);
+      _.each(subKeys, function(v, subK) {
+        return {
+          name: k + subK.name,
+          value: v
+        };
+      });
+
+      keys = keys.concat(subKeys);
+
+    } else {
+      keys.push({
+        name: k,
+        val: v
+      });
+    }
+  });
+
+  return keys;
+}
+
+function discoverKeysToCreate(val, context) {
+  var keys = [];
+
+  if (typeof val == 'object' && val !== null) {
+    var valKeys = convertToKeys(val);
+
+    valKeys.forEach(function(valK) {
+      valK.name = context.key + '/' + valK.name;
+    });
+
+    keys = keys.concat(valKeys);
+
+  } else {
+    keys = [{
+      name: context.key,
+      val: val
+    }];
+  }
+
+  return keys;
 }
